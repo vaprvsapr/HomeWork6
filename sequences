@@ -1,0 +1,169 @@
+#include <numeric>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
+#include <set>
+#include <locale>
+
+
+
+using namespace std;
+
+void Rearrange(vector<int>& data) {
+    for (int i = 0; i < data.size() - 1; ++i) {
+        swap(data[i], data[i + (rand() % (data.size() - 1 - i))]);
+    }
+    swap(data[data.size() - 1], data[(rand() % (data.size() - 2))]);
+}
+
+void Print(const vector<int>& data) {
+    for(auto element : data) {
+        cout << element << " ";
+    }
+    cout << endl;
+}
+
+    void GenerateRand(vector<int>& data, int size) {
+        for (int i = 0; i < size; ++i) {
+            data.push_back((rand() % 10) + 1);
+        }
+}
+
+vector<int> operator-(const vector<int>& lhs, const vector<int>& rhs) {
+    if(lhs.size() != rhs.size())
+        throw runtime_error("");
+
+    vector<int> ans;
+    ans.reserve(lhs.size());
+
+    for(int i =0; i < lhs.size(); i++)
+        ans.push_back(lhs[i] - rhs[i]);
+
+    return ans;
+}
+
+int main() {
+
+    srand(time(nullptr));
+
+    vector<int> P1;
+    GenerateRand(P1, 20);
+
+
+    for (int i = 0; i < 0; ++i) {
+        int number;
+        cin >> number;
+        P1.push_back(number);
+    }
+
+    Rearrange(P1); // Перемешиваю последовательность
+
+    Print(P1);
+
+    multiset<int> s = {P1.begin(), P1.end()};
+
+//    for(auto e : s) {
+//        cout << e << " ";
+//    }
+//    cout << endl;
+
+    auto is_unique = [&s](auto element) {
+        if(s.count(element) != 1) {
+            s.erase(s.find(element));
+            return true;
+        } else
+            return false;
+    };
+
+
+
+    P1 = {P1.begin(), remove_if(P1.begin(), P1.end(), is_unique)};
+
+//    for(auto e : s) {
+//        cout << e;
+//    }
+//    cout << endl;
+
+    Print(P1);
+
+    // Подсчёт нечетных чисел
+
+    cout << "even: " << count_if(P1.begin(), P1.end(), [](auto element) {
+        return (element % 2 == 1);
+    }) << endl;
+
+
+
+    // Определение минимального и максимального
+    cout << "max: " << *max(P1.begin(), P1.end()) << " min: " <<
+         *min(P1.begin(), P1.end());
+
+    cout << endl;
+
+    auto is_simple = [](auto element) {
+        for(int i = 2; i < element; i++) {
+            if((element % i) == 0)
+                return false;
+        }
+        return true;
+    };
+
+    vector<int> simple_numbers;
+    copy_if(P1.begin(), P1.end(),
+            back_inserter(simple_numbers), is_simple);
+
+    Print(simple_numbers);
+
+    // Заменяю квадратами
+    for(auto& element : P1) {
+        element *= element;
+    }
+    Print(P1);
+
+    // Создаю последовательность П2
+    vector<int> P2;
+    GenerateRand(P2, P1.size());
+    cout << "sum of P2: " << accumulate(P2.begin(), P2.end(), 0) << endl;
+
+    // Заменяю еденицами первые 3 значения
+    for(int i = 0; i < 3; i++) {
+        P2[i] = 1;
+    }
+
+    // Не дано указаний, как определять разность двух последовательностей
+    // Определим, как разность двух одномерных матриц
+
+    vector<int> P3 = P1 - P2;
+
+    Print(P1);
+    cout << "-" << endl;
+    Print(P2);
+    cout << "=" << endl;
+    Print(P3);
+    cout << endl;
+
+    P3 = {P3.begin(), remove_if(P3.begin(), P3.end(), [](auto element) {return element < 0;})};
+    Print(P3);
+
+    reverse(P3.begin(), P3.end());
+    Print(P3);
+
+    set<int> s1 = {P3.begin(), P3.end()};
+    cout << "maximum elements: " << *prev(prev(prev(s1.end()))) << " " << *prev(s1.end()) << " " << *(prev(prev(s1.end())));
+
+    sort(P1.begin(), P2.end());
+    sort(P2.begin(), P1.end());
+
+    vector<int> P4;
+    merge(P1.begin(), P1.end(), P2.begin(), P2.end(), back_inserter(P4));
+    // В задании сказано, просто слияние. Не сортировака
+    // Так. Упорядоченной вставки в неупорядоченную(неотсортированную последовательность)
+    // Такое сложно представить.
+    // Сначала надо сортировать P4.
+
+    auto diap = equal_range(P4.begin(), P4.end(), 1);
+
+
+}
