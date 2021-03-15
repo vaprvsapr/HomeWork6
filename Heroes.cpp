@@ -16,16 +16,16 @@ private:
 
 public:
     Hero(string  type, string  name, const double hp, const double st) :
-    character_type(std::move(type)),
-    character_name(std::move(name)),
-    health(hp),
-    strength(st) {}
+            character_type(std::move(type)),
+            character_name(std::move(name)),
+            health(hp),
+            strength(st) {}
 
     void Strike(Hero& otherHero) {
         if (this->health <= 0) {
             cout
-            << this->character_type << " " << this->character_name
-            << " is dead and not able to fight any more." << endl;
+                    << this->character_type << " " << this->character_name
+                    << " is dead and not able to fight any more." << endl;
         } else {
             if (otherHero.health <= 0) {
                 cout
@@ -33,7 +33,7 @@ public:
                         << " is already dead." << endl;
             } else {
                 otherHero.health -= this->strength *
-                        static_cast<double>((rand() % 1000)) / 1000;
+                                    static_cast<double>((rand() % 1000)) / 1000;
 
                 cout << this->character_name << " attacks " << otherHero.character_name
                      << ". Now " << otherHero.character_name << " has "
@@ -75,12 +75,15 @@ void SimpleTest() {
 void SimulateRandomFight() {
 
     Hero h1("Elf", "Aragorn", 100, 25);
-    Hero h2("Ork", "Jabar", 75, 30);
+    Hero h2("Ork", "Jabar", 75, 40);
+
+    int round = 1;
 
     while (h1.GetHealthPoints() >= 0 and h2.GetHealthPoints() >= 0) {
-        cout << "Fight!!!" << endl;
+        cout << "Round " << round << ". Fight!!!" << endl;
         h1.Strike(h2);
         h2.Strike(h1);
+        round++;
     }
 }
 
